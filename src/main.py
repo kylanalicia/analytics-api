@@ -1,8 +1,11 @@
 from typing import Union
 
 from fastapi import FastAPI
+from src.api.events import router as event_router
 
 app = FastAPI()
+# /api/events
+app.include_router(event_router, prefix='/api/events')
 
 
 @app.get("/")
