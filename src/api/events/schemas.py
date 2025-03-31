@@ -23,5 +23,5 @@ class EventSchema(BaseModel):
 # {"id": 12}
 
 class EventListSchema(BaseModel):
-    results: list[EventSchema]
+    results: List[EventSchema]
     count: int
