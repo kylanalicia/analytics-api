@@ -1,7 +1,7 @@
 import os
 from fastapi import APIRouter
 from .models import (
-    EventSchema,
+    EventModel,
     EventListSchema, 
     EventCreateSchema,
     EventUpdateSchema
@@ -28,7 +28,7 @@ def read_events() -> EventListSchema:
 # create view
 # POST /api/events/@router.post("/")
 @router.post("/")
-def create_events(payload: EventCreateSchema) -> EventSchema:
+def create_events(payload: EventCreateSchema) -> EventModel:
     print(payload.page)
     data = payload.model_dump() # payload -> dict -> pydantic
     return {"id": 123, **data}
@@ -36,19 +36,19 @@ def create_events(payload: EventCreateSchema) -> EventSchema:
 
 # GET /api/events/12
 @router.get("/{event_id}")
-def get_event(event_id:int) -> EventSchema: 
+def get_event(event_id:int) -> EventModel: 
     # a single row
     return{"id": event_id}
 
 # Update this data
 # PUT /api/events/12
 @router.put("/{event_id}")
-def update_event(event_id:int, payload:EventUpdateSchema) -> EventSchema: 
+def update_event(event_id:int, payload:EventUpdateSchema) -> EventModel: 
     # a single row
     data = payload.model_dump()
     return{"id": event_id, **data}
 
 # @router.delete("/{event_id}")
-# def get_event(event_id:int) -> EventSchema: 
+# def get_event(event_id:int) -> EventModel: 
 #     # a single row
 #     return{"id": event_id}
