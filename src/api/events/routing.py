@@ -1,6 +1,6 @@
 import os
-from fastapi import APIRouter, Depends
-from sqlmodel import Session
+from fastapi import APIRouter, Depends, HTTPException
+from sqlmodel import Session, select
 
 from src.api.db.session import get_session
 
@@ -17,15 +17,14 @@ from ..db.config import DATABASE_URL
 # Get data here
 # List View
 # GET /api/events/
-@router.get("/")
-def read_events() -> EventListSchema:
+@router.get("/", response_model=EventListSchema)
+def read_events(session: Session = Depends(get_session)):
     # a bunch of items in a table
-    print(os.environ.get("DATABASE_URL"), DATABASE_URL)
+    query = select(EventModel).order_by(EventModel.id.desc()).limit(10)
+    results = session.exec(query).all()
     return{
-        "results": [
-            {"id": 1}, {"id": 2}, {"id": 3}
-    ],
-    "count": 3
+        "results": results,
+        "count": len(results)
     }
 
 # SEND DATA HERE!
@@ -45,10 +44,14 @@ def create_events(
 
 
 # GET /api/events/12
-@router.get("/{event_id}")
-def get_event(event_id:int) -> EventModel: 
+@router.get("/{event_id}", response_model=EventModel)
+def get_event(event_id:int, session: Session = Depends(get_session)): 
     # a single row
-    return{"id": event_id}
+    query = select(EventModel).where(EventModel.id == event_id)
+    result = session.exec(query).first()
+    if not result:
+        raise HTTPException(status_code = 404, detail="Eventt not found")
+    return result
 
 # Update this data
 # PUT /api/events/12
