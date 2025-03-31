@@ -1,5 +1,9 @@
 import os
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlmodel import Session
+
+from src.api.db.session import get_session
+
 from .models import (
     EventModel,
     EventListSchema, 
@@ -27,10 +31,16 @@ def read_events() -> EventListSchema:
 # SEND DATA HERE!
 # create view
 # POST /api/events/@router.post("/")
-@router.post("/")
-def create_events(payload: EventCreateSchema) -> EventModel:
+@router.post("/", response_model=EventModel)
+def create_events(
+    payload: EventCreateSchema, 
+    session: Session = Depends(get_session)):
     print(payload.page)
     data = payload.model_dump() # payload -> dict -> pydantic
+    obj = EventModel.model_validate(data)
+    session.add(obj)
+    session.commit()
+    session.refresh(obj)
     return {"id": 123, **data}
 
 
