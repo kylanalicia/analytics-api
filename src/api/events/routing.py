@@ -2,7 +2,7 @@ import os
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
-from src.api.db.session import get_session
+from api.db.session import get_session
 
 from .models import (
     EventModel,
