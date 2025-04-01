@@ -4,18 +4,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.web
+    # environment:
+    #   - PORT=8002
+    #   - DATABASE_URL=postgresql+psycopg://time-user:time-pw@db_service:5432/timescaledb
     env_file:
       - .env.compose
     environment:
       - PYTHONPATH=/code/src 
     ports:
       - "8002:8002"
-    command: uvicorn src.main:app --host 0.0.0.0 --port 8002 --reload
+    command: uvicorn src.main:app --host 0.0.0.0 --port 80 --reload
     volumes:
       - .:/code:rw
-    depends_on:
-      db_service:
-        condition: service_healthy  # Ensures DB is ready before app starts
     develop:
       watch:
         - action: rebuild
@@ -24,7 +24,6 @@ services:
           path: requirements.txt
         - action: rebuild
           path: compose.yaml
-
   db_service:
     image: timescale/timescaledb:latest-pg17
     environment:
@@ -33,13 +32,10 @@ services:
       - POSTGRES_DB=timescaledb
     ports:
       - "5432:5432"
+    # expose:
+    #   - 5432
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U time-user -d timescaledb"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
 volumes:
   timescaledb_data:

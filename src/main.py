@@ -37,6 +37,6 @@ def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
 
 
-@app.get("/healthz")
+@app.get("/health")
 def read_api_health():
     return {"status": "ok"}
