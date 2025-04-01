@@ -13,7 +13,7 @@ services:
       - PYTHONPATH=/code/src 
     ports:
       - "8002:8002"
-    command: uvicorn src.main:app --host 0.0.0.0 --port 80 --reload
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8002 --reload
     volumes:
       - .:/code:rw
     develop:
