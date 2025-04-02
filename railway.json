@@ -11,8 +11,8 @@
     },
     "deploy": {
       "healthcheckPath": "/healthz",
-      "healthcheckTimeout": 300,
-      "startupTimeout": 300,
+      "healthcheckTimeout": 30,
+      "startupTimeout": 60,
       "restartPolicyType": "always",
       "restartPolicyMaxRetries": 10
     }

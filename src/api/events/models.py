@@ -4,7 +4,6 @@ from typing import List, Optional
 import sqlmodel
 from sqlmodel import SQLModel, Field
 from timescaledb import TimescaleModel
-from timescaledb.utils import get_utc_now
 
 # page visits at any given time
 class EventModel(TimescaleModel, table=True):
